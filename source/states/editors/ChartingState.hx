@@ -478,7 +478,7 @@ var zoomFactorTxt:String = "1 / 1";
 		clear_notes.normalStyle.bgColor = FlxColor.RED;
 		clear_notes.normalStyle.textColor = FlxColor.WHITE;
 
-		var stepperBPM:PsychUINumericStepper = new PsychUINumericStepper(10, 70, 1, 1, 1, 400, 3);
+		var stepperBPM:PsychUINumericStepper = new PsychUINumericStepper(10, 70, 1, 1, 1, 999, 3);
 		stepperBPM.value = Conductor.bpm;
 		stepperBPM.name = 'song_bpm';
 

@@ -17,6 +17,8 @@ import openfl.events.Event;
 import openfl.display.StageScaleMode;
 import lime.app.Application;
 import states.TitleState;
+import flixel.math.FlxMath;
+import flixel.util.FlxColor;
 
 #if linux
 import lime.graphics.Image;
@@ -71,13 +73,9 @@ class Main extends Sprite
 		#end
 
 		if (stage != null)
-		{
 			init();
-		}
 		else
-		{
 			addEventListener(Event.ADDED_TO_STAGE, init);
-		}
 		#if VIDEOS_ALLOWED
 		hxvlc.util.Handle.init();
 		#end
@@ -86,11 +84,16 @@ class Main extends Sprite
 	private function init(?E:Event):Void
 	{
 		if (hasEventListener(Event.ADDED_TO_STAGE))
-		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
-		}
 
 		setupGame();
+
+		var timer = new haxe.Timer(1);
+		timer.run = function()
+		{
+			coloring();
+			if (fpsVar.textColor == 0) fpsVar.textColor = -4775566;
+		} // needs to be done because textcolor beco
 	}
 
 	private function setupGame():Void
@@ -119,6 +122,7 @@ class Main extends Sprite
 		#if LUA_ALLOWED Lua.set_callbacks_function(cpp.Callable.fromStaticFunction(psychlua.CallbackHandler.call)); #end
 		Controls.instance = new Controls();
 		ClientPrefs.loadDefaultKeys();
+		#if (cpp && windows) CppAPI.darkMode(); #end
 		#if ACHIEVEMENTS_ALLOWED Achievements.load(); #end
 		addChild(new FlxGame(game.width, game.height, game.initialState, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate, game.skipSplash, game.startFullscreen));
 
@@ -127,9 +131,7 @@ class Main extends Sprite
 		addChild(fpsVar);
 		Lib.current.stage.align = "tl";
 		Lib.current.stage.scaleMode = StageScaleMode.NO_SCALE;
-		if(fpsVar != null) {
-			fpsVar.visible = ClientPrefs.data.showFPS;
-		}
+		if(fpsVar != null) fpsVar.visible = ClientPrefs.data.showFPS;
 		#end
 
 		#if linux
@@ -142,7 +144,7 @@ class Main extends Sprite
 		FlxG.mouse.visible = false;
 		#end
 
-		FlxG.fixedTimestep = false;
+		// FlxG.fixedTimestep = false;
 		FlxG.game.focusLostFramerate = 60;
 		FlxG.keys.preventDefaultKeys = [TAB];
 		
@@ -168,6 +170,46 @@ class Main extends Sprite
 		});
 	}
 
+	// Chroma Effect (12 Colors)
+	var array:Array<FlxColor> = [
+		FlxColor.fromRGB(216, 34, 83),
+		FlxColor.fromRGB(255, 38, 0),
+		FlxColor.fromRGB(255, 80, 0),
+		FlxColor.fromRGB(255, 147, 0),
+		FlxColor.fromRGB(255, 199, 0),
+		FlxColor.fromRGB(255, 255, 0),
+		FlxColor.fromRGB(202, 255, 0),
+		FlxColor.fromRGB(0, 255, 0),
+		FlxColor.fromRGB(0, 146, 146),
+		FlxColor.fromRGB(0, 0, 255),
+		FlxColor.fromRGB(82, 40, 204),
+		FlxColor.fromRGB(150, 33, 146)
+	];
+	var skippedFrames = 0;
+	var currentColor = 0;
+
+	// Event Handlers
+	public function coloring():Void
+	{
+		// Hippity, Hoppity, your code is now my property (from KadeEngine)
+		if (ClientPrefs.data.fpsRainbow)
+		{
+			if (currentColor >= array.length) currentColor = 0;
+			currentColor = Math.round(FlxMath.lerp(0, array.length, skippedFrames / ClientPrefs.data.framerate));
+			(cast(Lib.current.getChildAt(0), Main)).changeFPSColor(array[currentColor]);
+			currentColor++;
+			skippedFrames++;
+			if (skippedFrames > ClientPrefs.data.framerate)
+				skippedFrames = 0;
+		}
+		else fpsVar.textColor = FlxColor.fromRGB(255, 255, 255);
+	}
+
+	public function changeFPSColor(color:FlxColor)
+	{
+		fpsVar.textColor = color;
+	}
+	
 	static function resetSpriteCache(sprite:Sprite):Void {
 		@:privateAccess {
 		        sprite.__cacheBitmap = null;

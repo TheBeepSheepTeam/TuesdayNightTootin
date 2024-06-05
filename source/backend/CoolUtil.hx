@@ -7,7 +7,7 @@ class CoolUtil
 {
 	inline public static function quantize(f:Float, snap:Float){
 		// changed so this actually works lol
-		var m:Float = Math.fround(f * snap);
+		final m:Float = Math.fround(f * snap);
 		//trace(snap);
 		return (m / snap);
 	}
@@ -15,6 +15,9 @@ class CoolUtil
 	inline public static function capitalize(text:String)
 		return text.charAt(0).toUpperCase() + text.substr(1).toLowerCase();
 
+	inline public static function boundTo(value:Float, min:Float, max:Float):Float
+		return Math.max(min, Math.min(max, value));
+	
 	inline public static function coolTextFile(path:String):Array<String>
 	{
 		var daList:String = null;
@@ -122,6 +125,10 @@ class CoolUtil
 		#else
 			FlxG.error("Platform is not supported for CoolUtil.openFolder");
 		#end
+	}
+
+	inline public static function sortByID(i:Int, basic1:FlxBasic, basic2:FlxBasic):Int {
+		return basic1.ID > basic2.ID ? -i : basic2.ID > basic1.ID ? i : 0;
 	}
 
 	/**

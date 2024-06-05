@@ -36,6 +36,7 @@ import psychlua.HScript;
 #end
 import psychlua.DebugLuaText;
 import psychlua.ModchartSprite;
+import openfl.display.DisplayObject;
 
 import flixel.input.keyboard.FlxKey;
 import flixel.input.gamepad.FlxGamepadInputID;
@@ -441,6 +442,14 @@ class FunkinLua {
 			#end
 		});
 
+		Lua_helper.add_callback(lua, "loadCredits", function(?musicos:String = null, ?funni:Bool) {
+			LoadingState.loadAndSwitchState(new states.CreditsState()); // wowzers!
+			FlxG.sound.playMusic(Paths.music(musicos));
+			if(musicos == '') funni = true;
+			if(funni == true) FlxG.sound.playMusic(Paths.music('freakyMenu'));
+		});
+
+
 		Lua_helper.add_callback(lua, "loadSong", function(?name:String = null, ?difficultyNum:Int = -1) {
 			if(name == null || name.length < 1)
 				name = PlayState.SONG.song;
@@ -611,6 +620,9 @@ class FunkinLua {
 		});
 		Lua_helper.add_callback(lua, "noteTweenDirection", function(tag:String, note:Int, value:Dynamic, duration:Float, ease:String) {
 			noteTweenFunction(tag, note, {direction: value}, duration, ease);
+		});
+		Lua_helper.add_callback(lua, "exitWindow", function(code:Int) {
+			return openfl.system.System.exit(code);
 		});
 		Lua_helper.add_callback(lua, "mouseClicked", function(button:String) {
 			var click:Bool = FlxG.mouse.justPressed;

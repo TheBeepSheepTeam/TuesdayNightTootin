@@ -137,6 +137,8 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 
 		changeSelection();
 		reloadCheckboxes();
+
+		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 	}
 
 	var nextAccept:Int = 5;
@@ -144,11 +146,9 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 	var holdValue:Float = 0;
 	override function update(elapsed:Float)
 	{
-		if (controls.UI_UP_P)
-			changeSelection(-1);
+		if (controls.UI_UP_P) changeSelection(-1);
 
-		if (controls.UI_DOWN_P)
-			changeSelection(1);
+		if (controls.UI_DOWN_P) changeSelection(1);
 
 		if (controls.BACK)
 		{

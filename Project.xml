@@ -25,7 +25,7 @@
 	<define name="TRANSLATIONS_ALLOWED" />
 	
 	<define name="SHOW_LOADING_SCREEN" />
-	<define name="PSYCH_WATERMARKS"/> <!-- DELETE THIS TO REMOVE THE PSYCH LOGO FROM LOADING SCREEN -->
+	<!--<define name="PSYCH_WATERMARKS"/>--> <!-- DELETE THIS TO REMOVE THE PSYCH LOGO FROM LOADING SCREEN -->
 
 	<section if="officialBuild">
 		<define name="TITLE_SCREEN_EASTER_EGG"/>
@@ -164,6 +164,11 @@
 	<haxeflag name="--macro" value="allowPackage('flash')" />
 	<haxeflag name="--macro" value="include('my.pack')" />
 	<haxeflag name="--macro" value="macros.Keep.keepClasses()" />
+	<haxeflag name="-dce" value="no" if="HSCRIPT_ALLOWED" />
+
+	<!-- FIX LINUX NOW! -->
+	<!--Disables the use of precompiled headers but can cause issues with build times and memory usage-->
+	<haxedef name="NO_PRECOMPILED_HEADERS" if="linux" />
 
 	<!-- _________________________________ Custom _______________________________ -->
 

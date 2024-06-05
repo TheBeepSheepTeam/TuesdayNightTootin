@@ -71,12 +71,24 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 		option.decimals = 1;
 		addOption(option);
 
+		var option:Option = new Option('Botplay Sine Effect', 
+		"If checked, the botplay text in-game does that one sine effect\nwhile the song is being played and when Botplay is on.", 
+		'botplaySine', 
+		'bool');
+		addOption(option);
+		
 		var option:Option = new Option('Hide HUD',
 			'If checked, hides most HUD elements.',
 			'hideHud',
 			BOOL);
 		addOption(option);
 		
+		var option:Option = new Option('Icon Colored Health Bar',
+		"If unchecked, the health bar will have the colors from vanilla FNF\nrather than colors based on the icons.",
+		'coloredHealthBar',
+		'bool');
+	    addOption(option);
+
 		var option:Option = new Option('Time Bar:',
 			"What should the Time Bar display?",
 			'timeBarType',
@@ -102,6 +114,11 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 			BOOL);
 		addOption(option);
 
+		var option:Option = new Option('Display MS Offset Every Hit', 
+		'If checked, the text with the note offset (in milliseconds) will appear near notes.',
+		'showMsText', 'bool');
+	    addOption(option);
+		
 		var option:Option = new Option('Health Bar Opacity',
 			'How much transparent should the health bar and icons be.',
 			'healthBarAlpha',
@@ -120,6 +137,9 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 			BOOL);
 		addOption(option);
 		option.onChange = onChangeFPSCounter;
+
+		var option:Option = new Option('Rainbow FPS', "If checked, makes the FPS have a chroma effect.\nSo Kade Engine, isn't it?", 'fpsRainbow', 'bool');
+		addOption(option);
 		#end
 		
 		var option:Option = new Option('Pause Screen Song:',

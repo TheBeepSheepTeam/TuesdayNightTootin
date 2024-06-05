@@ -20,7 +20,7 @@ class OutdatedState extends MusicBeatState
 			\n
 			Thank you for using the Engine!",
 			32);
-		warnText.setFormat("VCR OSD Mono", 32, FlxColor.WHITE, CENTER);
+		warnText.setFormat(Paths.font("vcr.ttf"), 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
 		add(warnText);
 	}
@@ -32,9 +32,8 @@ class OutdatedState extends MusicBeatState
 				leftState = true;
 				CoolUtil.browserLoad("https://github.com/ShadowMario/FNF-PsychEngine/releases");
 			}
-			else if(controls.BACK) {
+			else if(controls.BACK)
 				leftState = true;
-			}
 
 			if(leftState)
 			{

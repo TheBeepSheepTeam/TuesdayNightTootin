@@ -14,17 +14,35 @@ enum MainMenuColumn {
 
 class MainMenuState extends MusicBeatState
 {
-	public static var psychEngineVersion:String = '1.0b'; // This is also used for Discord RPC
+	public static var tootsModVersion:String = '1.0 DEMO'; //This is also used for Discord RPC
+	public static var psychEngineVersion:String = '1.0b-toots'; //This is also used for Discord RPC
 	public static var curSelected:Int = 0;
 	public static var curColumn:MainMenuColumn = CENTER;
 	var allowMouse:Bool = true; //Turn this off to block mouse movement in menus
+
+	public static var quotes:Array<String> = [
+		#if html5
+		"You're on web. Why the FUCK are you on web? You can't get even decent easter eggs, bitch."
+		#elseif debug
+		"You want logs on debug? I'll give you logs on debug. Out of wood, easter eggs can't display like this."
+		#else
+		"500+  Giftcards! (-CharlesCatYT)",
+		"vile fnf (-BambiTGA)",
+		"I'm gonna stop updating Psych Engine soon. (-ShadowMario)",
+		"Its already been 1 beer... (-cyborg henry)",
+		"sorry i may have taken a bite out of your chicken (-cyborg henry)",
+		"Get briccedd (-cyborg henry)",
+		"when did we start playing freeze tag (-Vencerist)",
+		"I like starting a fire (-Vencerist)"
+		#end
+	];
 
 	var menuItems:FlxTypedGroup<FlxSprite>;
 	var leftItem:FlxSprite;
 	var rightItem:FlxSprite;
 
 	//Centered/Text options
-	var optionShit:Array<String> = [
+	final optionShit:Array<String> = [
 		'story_mode',
 		'freeplay',
 		#if MODS_ALLOWED 'mods', #end
@@ -46,12 +64,14 @@ class MainMenuState extends MusicBeatState
 
 		#if DISCORD_ALLOWED
 		// Updating Discord Rich Presence
-		DiscordClient.changePresence("In the Menus", null);
+		DiscordClient.changePresence("Main Menu", null);
 		#end
 
 		persistentUpdate = persistentDraw = true;
 
-		var yScroll:Float = 0.25;
+		FlxG.mouse.visible = true;
+
+		final yScroll:Float = 0.25;
 		var bg:FlxSprite = new FlxSprite(-80).loadGraphic(Paths.image('menuBG'));
 		bg.antialiasing = ClientPrefs.data.antialiasing;
 		bg.scrollFactor.set(0, yScroll);
@@ -91,19 +111,31 @@ class MainMenuState extends MusicBeatState
 			rightItem.x -= rightItem.width;
 		}
 
-		var psychVer:FlxText = new FlxText(12, FlxG.height - 44, 0, "Psych Engine v" + psychEngineVersion, 12);
+		final psychVer:FlxText = new FlxText(12, FlxG.height - 84, 0, "Psych Engine v" + psychEngineVersion, 12);
+		psychVer.active = false;
 		psychVer.scrollFactor.set();
-		psychVer.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		psychVer.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(psychVer);
-		var fnfVer:FlxText = new FlxText(12, FlxG.height - 24, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 12);
+		final versionShit2:FlxText = new FlxText(12, FlxG.height - 64, 0, "Tuesday Night Tootin' v" + tootsModVersion, 12);
+		versionShit2.active = false;
+		versionShit2.scrollFactor.set();
+		versionShit2.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(versionShit2);
+		final fnfVer:FlxText = new FlxText(12, FlxG.height - 44, 0, "Friday Night Funkin' v" + Application.current.meta.get('version'), 12);
+		fnfVer.active = false;
 		fnfVer.scrollFactor.set();
-		fnfVer.setFormat("VCR OSD Mono", 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		fnfVer.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		add(fnfVer);
+		final versionShit4:FlxText = new FlxText(12, FlxG.height - 24, 0, quotes[Std.random(quotes.length)], 12);
+		versionShit4.active = false;
+		versionShit4.scrollFactor.set();
+		versionShit4.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		add(versionShit4);
 		changeItem();
 
 		#if ACHIEVEMENTS_ALLOWED
 		// Unlocks "Freaky on a Friday Night" achievement if it's a Friday and between 18:00 PM and 23:59 PM
-		var leDate = Date.now();
+		final leDate = Date.now();
 		if (leDate.getDay() == 5 && leDate.getHours() >= 18)
 			Achievements.unlock('friday_night_play');
 
@@ -142,11 +174,8 @@ class MainMenuState extends MusicBeatState
 
 		if (!selectedSomethin)
 		{
-			if (controls.UI_UP_P)
-				changeItem(-1);
-
-			if (controls.UI_DOWN_P)
-				changeItem(1);
+			if (controls.UI_UP_P || controls.UI_DOWN_P)
+				changeItem(controls.UI_UP_P ? -1 : 1);
 
 			if (allowMouse && FlxG.mouse.deltaScreenX != 0 && FlxG.mouse.deltaScreenY != 0) //more accurate than FlxG.mouse.justMoved
 			{

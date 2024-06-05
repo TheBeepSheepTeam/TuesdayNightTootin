@@ -40,6 +40,7 @@ class LoadingState extends MusicBeatState
 	
 	var target:FlxState = null;
 	var stopMusic:Bool = false;
+	public static var globeTrans:Bool = true;
 	var dontUpdate:Bool = false;
 
 	var bar:FlxSprite;
@@ -63,6 +64,56 @@ class LoadingState extends MusicBeatState
 	#else
 	var funkay:FlxSprite;
 	#end
+
+	var tipTxt:FlxText;
+	var tips:Array<String> = [
+		"Don't spam, it won't work.",
+		"psych engine port\nfatherless behavior",
+		"why am i wasting my\ntime making this mod",
+		"Null Object Reference",
+		"This isn't a kids game, right?",
+		"I wonder what ethanol tastes like.",
+		"Remember, licking doorknobs is illegal on other planets.",
+		"No tip here.",
+		"I miss FNF's peak.",
+		"Toodles!",
+		"discord light mode\nbrighter than the fucking sun",
+		"Funk all the way.",
+		"WhY aRe YoU jUsT rEpEaTiNg WhAt Im SaYiNg",
+		"Booyah!",
+		"Friday Night Funkin'\nMic'd Up.",
+		"before psych engine there was kade engine\nthose were the days",
+		"Do people actually read these?",
+		"Skill issue.",
+		"Cock joke.",
+		"WHAT",
+		"As long as there's 2 people left on the planet,\nsomeone is gonna want someone dead.",
+		"His name isn't Keith.",
+		"THERE AREN'T COUGARS IN MISSIONS",
+		"Disingenuous dense motherfucker.",
+		"My father is dying.\nPlease stop beatboxing.",
+		"pico funny\nbig ol' bunny",
+		"Joe mama",
+		"Gettin freaky' on a friday night yeah",
+		"Worjdjhewndjaiqkkwbdjkwqodbdjwoen&:’eked&3rd!2’wonenksiwnwihqbdibejwjebdjjejwjenfjdjejejjwkwiwjnensjsiieejjsjskikdjdnnwjwiwjejdjdjwiejdbdiwjdhehhrifjdnwoqnd",
+		"Oo0ooOoOOo000OOO!!!",
+		"Witness the might\nof the seas!",
+		"KadeDev is best.\nBut his own engine sucks though.",
+		"CARAMEL ARROW SUPREMACY",
+		"I will rip your intestines out.",
+		"flippity floppity",
+		"i'm surprised people might actually\nbe reading this at this point",
+		"potato\nwaterslide",
+		"GingerBrave\nMore like",
+		"CHILD PORN -3D impact text wall",
+		"I love to smash my keyboard.",
+		"there might be someone out there that's thinking about making a mod about you.\nkeep that in mind.",
+		"Funkin' Forever.",
+		"i hope you go mooseing\nand get fucked by a campfire",
+		"WENT BACK TO FREEPLAY??",
+		"Ugh",
+		"Bop beep be be skdoo bep"
+	];
 
 	override function create()
 	{
@@ -123,11 +174,23 @@ class LoadingState extends MusicBeatState
 		bg.screenCenter(X);
 		add(bg);
 
+		var bottomPanel:FlxSprite = new FlxSprite(0, FlxG.height - 100).makeGraphic(FlxG.width, 100, 0xFF000000);
+		bottomPanel.alpha = 0.5;
+		add(bottomPanel);
+
 		bar = new FlxSprite(bg.x + 5, bg.y + 5).makeGraphic(1, 1, FlxColor.WHITE);
 		bar.scale.set(0, 15);
 		bar.updateHitbox();
 		add(bar);
 		barWidth = Std.int(bg.width - 10);
+
+		tipTxt = new FlxText(0, FlxG.height - 80, 1000, "", 26);
+		tipTxt.scrollFactor.set();
+		tipTxt.setFormat(Paths.font("vcr.ttf"), 26, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		tipTxt.screenCenter(X);
+		add(tipTxt);
+
+		tipTxt.text = tips[FlxG.random.int(0, tips.length - 1)];
 
 		persistentUpdate = true;
 		super.create();
