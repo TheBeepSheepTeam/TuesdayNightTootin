@@ -136,7 +136,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var value2InputText:PsychUIInputText;
 	var currentSongName:String;
 
-	var zoomTxt:FlxText;
+var zoomFactorTxt:String = "1 / 1";
 	var helpBg:FlxSprite;
 	var helpTexts:FlxSpriteGroup;
 
@@ -378,10 +378,6 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 			changeSection();
 		}
 		lastSong = currentSongName;
-
-		zoomTxt = new FlxText(10, 10, 0, "Zoom: 1 / 1", 16);
-		zoomTxt.scrollFactor.set();
-		add(zoomTxt);
 
 		add(helpBg);
 		add(helpTexts);
@@ -2033,7 +2029,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		"\nSection: " + curSec +
 		"\n\nBeat: " + Std.string(curDecBeat).substring(0,4) +
 		"\n\nStep: " + curStep +
-		"\n\nBeat Snap: " + quantization + "th";
+		"\n\nBeat Snap: " + quantization + "th" +
+		"\n\nZoom: " + zoomFactorTxt;
 
 		var playedSound:Array<Bool> = [false, false, false, false]; //Prevents ouchy GF sex sounds
 		curRenderedNotes.forEachAlive(function(note:Note) {
@@ -2109,9 +2106,8 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 	function updateZoom() {
 		var daZoom:Float = zoomList[curZoom];
-		var zoomThing:String = '1 / ' + daZoom;
-		if(daZoom < 1) zoomThing = Math.round(1 / daZoom) + ' / 1';
-		zoomTxt.text = 'Zoom: ' + zoomThing;
+		zoomFactorTxt = '1 / ' + daZoom;
+		if(daZoom < 1) zoomFactorTxt = Math.round(1 / daZoom) + ' / 1';
 		reloadGridLayer();
 	}
 
