@@ -1,6 +1,7 @@
 package psychlua;
 
 import flixel.util.FlxSave;
+import flixel.input.keyboard.FlxKey;
 import openfl.utils.Assets;
 
 //
@@ -14,13 +15,43 @@ class ExtraFunctions
 		var lua:State = funk.lua;
 		
 		// Keyboard & Gamepads
-		Lua_helper.add_callback(lua, "keyboardJustPressed", function(name:String) return Reflect.getProperty(FlxG.keys.justPressed, name));
-		Lua_helper.add_callback(lua, "keyboardPressed", function(name:String) return Reflect.getProperty(FlxG.keys.pressed, name));
-		Lua_helper.add_callback(lua, "keyboardReleased", function(name:String) return Reflect.getProperty(FlxG.keys.justReleased, name));
+		Lua_helper.add_callback(lua, "keyboardJustPressed", function(name:String) return Reflect.getProperty(FlxG.keys.justPressed, name.toUpperCase()));
+		Lua_helper.add_callback(lua, "keyboardPressed", function(name:String) return Reflect.getProperty(FlxG.keys.pressed, name.toUpperCase()));
+		Lua_helper.add_callback(lua, "keyboardReleased", function(name:String) return Reflect.getProperty(FlxG.keys.justReleased, name.toUpperCase()));
 
-		Lua_helper.add_callback(lua, "anyGamepadJustPressed", function(name:String) return FlxG.gamepads.anyJustPressed(name));
-		Lua_helper.add_callback(lua, "anyGamepadPressed", function(name:String) FlxG.gamepads.anyPressed(name));
-		Lua_helper.add_callback(lua, "anyGamepadReleased", function(name:String) return FlxG.gamepads.anyJustReleased(name));
+		Lua_helper.add_callback(lua, "firstKeyJustPressed", function():String
+		{
+			var result:String = cast (FlxG.keys.firstJustPressed(), FlxKey).toString();
+
+			if (result == null || result.length < 1)
+				result = "NONE"; // "Why?" `FlxKey.toStringMap` does not contain `FlxKey.NONE`, so we need to have a check for it.
+
+			return result;
+		});
+
+		Lua_helper.add_callback(lua, "firstKeyPressed", function():String
+		{
+			var result:String = cast (FlxG.keys.firstPressed(), FlxKey).toString();
+
+			if (result == null || result.length < 1)
+				result = "NONE";
+
+			return result;
+		});
+
+		Lua_helper.add_callback(lua, "firstKeyJustReleased", function():String
+		{
+			var result:String = cast (FlxG.keys.firstJustReleased(), FlxKey).toString();
+
+			if (result == null || result.length < 1)
+				result = "NONE";
+
+			return result;
+		});
+		
+		Lua_helper.add_callback(lua, "anyGamepadJustPressed", function(name:String) return FlxG.gamepads.anyJustPressed(name.toUpperCase()));
+		Lua_helper.add_callback(lua, "anyGamepadPressed", function(name:String) FlxG.gamepads.anyPressed(name.toUpperCase()));
+		Lua_helper.add_callback(lua, "anyGamepadReleased", function(name:String) return FlxG.gamepads.anyJustReleased(name.toUpperCase()));
 
 		Lua_helper.add_callback(lua, "gamepadAnalogX", function(id:Int, ?leftStick:Bool = true)
 		{
@@ -41,21 +72,21 @@ class ExtraFunctions
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null) return false;
 
-			return Reflect.getProperty(controller.justPressed, name) == true;
+			return Reflect.getProperty(controller.justPressed, name.toUpperCase()) == true;
 		});
 		Lua_helper.add_callback(lua, "gamepadPressed", function(id:Int, name:String)
 		{
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null) return false;
 
-			return Reflect.getProperty(controller.pressed, name) == true;
+			return Reflect.getProperty(controller.pressed, name.toUpperCase()) == true;
 		});
 		Lua_helper.add_callback(lua, "gamepadReleased", function(id:Int, name:String)
 		{
 			var controller = FlxG.gamepads.getByID(id);
 			if (controller == null) return false;
 
-			return Reflect.getProperty(controller.justReleased, name) == true;
+			return Reflect.getProperty(controller.justReleased, name.toUpperCase()) == true;
 		});
 
 		Lua_helper.add_callback(lua, "keyJustPressed", function(name:String = '') {
@@ -148,6 +179,19 @@ class ExtraFunctions
 		});
 
 		// File management
+		Lua_helper.add_callback(lua, "parseJson", function(location:String):{}
+		{
+			var parsed:{} = {};
+
+			if (FileSystem.exists(Paths.getPath('data/$location', TEXT)))
+			{
+				parsed = tjson.TJSON.parse(File.getContent(Paths.getPath('data/$location', TEXT)));
+			}
+			else
+				parsed = tjson.TJSON.parse(location);
+
+			return parsed;
+		});
 		Lua_helper.add_callback(lua, "checkFileExists", function(filename:String, ?absolute:Bool = false) {
 			#if MODS_ALLOWED
 			if(absolute) return FileSystem.exists(filename);
