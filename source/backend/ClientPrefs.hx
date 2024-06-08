@@ -29,6 +29,7 @@ import states.TitleState;
 	public var shaders:Bool = true;
 	public var cacheOnGPU:Bool = false; //From Stilic
 	public var framerate:Int = 60;
+	public var hideScoreText:Bool = false;
 	public var camZooms:Bool = true;
 	public var hideHud:Bool = false;
 	public var noteOffset:Int = 0;

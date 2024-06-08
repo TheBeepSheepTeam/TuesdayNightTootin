@@ -40,6 +40,25 @@ class CoolUtil
 		return colorNum != null ? colorNum : FlxColor.WHITE;
 	}
 
+	/**
+	 * Returns a `FlxColor` by receiving an array with integer values,
+	 * automatically fixes the array if fields are missing,
+	 * format: [Red, Green, Blue, Alpha].
+	 * @param colors 			Your base color array.
+	 * @param defColors			The default colors that should be used in the event of an error.
+	**/
+	inline public static function colorFromArray(colors: Array<Int>, ?defColors: Array<Int>) {
+		colors = fixRGBColorArray(colors, defColors);
+		return FlxColor.fromRGB(colors[0], colors[1], colors[2], colors[3]);
+	}
+
+	inline public static function fixRGBColorArray(colors: Array<Int>, ?defColors: Array<Int>) {
+		// helper function used on characters n such
+		final endResult: Array<Int> = (defColors != null && defColors.length > 2) ? defColors : [255, 255, 255, 255]; // Red, Green, Blue, Alpha
+		for (i in 0...endResult.length) if (colors[i] > -1) endResult[i] = colors[i];
+		return endResult;
+	}
+	
 	inline public static function listFromString(string:String):Array<String>
 	{
 		var daList:Array<String> = [];

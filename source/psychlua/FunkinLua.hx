@@ -41,6 +41,8 @@ import openfl.display.DisplayObject;
 import flixel.input.keyboard.FlxKey;
 import flixel.input.gamepad.FlxGamepadInputID;
 
+import Sys;
+
 import haxe.Json;
 
 class FunkinLua {
@@ -440,6 +442,10 @@ class FunkinLua {
 			#else
 			luaTrace("removeHScript: HScript is not supported on this platform!", false, false, FlxColor.RED);
 			#end
+		});
+
+		Lua_helper.add_callback(lua, "pcUserName", function() { // i love danger :D
+			return Sys.environment()["USERNAME"];
 		});
 
 		Lua_helper.add_callback(lua, "loadCredits", function(?musicos:String = null, ?funni:Bool) {

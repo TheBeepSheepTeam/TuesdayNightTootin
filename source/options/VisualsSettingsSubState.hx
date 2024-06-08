@@ -119,6 +119,12 @@ class VisualsSettingsSubState extends BaseOptionsMenu
 		'showMsText', 'bool');
 	    addOption(option);
 		
+		var option:Option = new Option('Hide Score Text',
+			'If checked, hides the info bar that is under the health bar in-game.',
+			'hideScoreText',
+			'bool');
+		addOption(option);
+		
 		var option:Option = new Option('Health Bar Opacity',
 			'How much transparent should the health bar and icons be.',
 			'healthBarAlpha',
